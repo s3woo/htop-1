@@ -18,14 +18,6 @@ in the source distribution for its full text.
 
 #include <ctype.h>
 
-/*{
-
-typedef struct SignalItem_ {
-   const char* name;
-   int number;
-} SignalItem;
-
-}*/
 
 Panel* SignalsPanel_new() {
    Panel* this = Panel_new(1, 1, 1, 1, true, Class(ListItem), FunctionBar_newEnterEsc("Send   ", "Cancel "));
@@ -56,3 +48,22 @@ Panel* SignalsPanel_new() {
    Panel_setSelected(this, defaultPosition);
    return this;
 }
+
+Panel* LimitPanel_new() {
+   Panel* this = Panel_new(1, 1, 1, 1, true, Class(ListItem), FunctionBar_newEnterEsc("Send   ", "Cancel "));
+   const int defaultLimit = 50;
+   int defaultPosition = 50;
+   unsigned int i;
+   for (i = 0; i < 100; i++) {
+      Panel_set(this, i, (Object*) ListItem_new(Platform_limit[i].name, Platform_limit[i].number));
+      // signal 15 is not always the 15th signal in the table
+      if (Platform_limit[i].number == defaultLimit) {
+         defaultPosition = i;
+      }
+   }
+  
+   Panel_setHeader(this, "Send Limit(%):");
+   Panel_setSelected(this, defaultPosition);
+   return this;
+}
+
